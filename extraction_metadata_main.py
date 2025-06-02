@@ -504,3 +504,53 @@ def run_validation(train_dir: str, test_dir: str, train_csv: str, test_csv: str)
 if __name__ == "__main__":
     run_validation(TRAIN_DIR, TEST_DIR, TRAIN_CSV, TEST_CSV)
 
+
+
+
+##Code Rental Agreement Metadata Extraction API
+
+import os
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import JSONResponse
+import shutil
+from typing import Optional
+
+app = FastAPI(title="Rental Agreement Metadata Extraction API")
+
+@app.post("/extract/")
+async def extract_metadata(file: UploadFile = File(...)):
+    # Save uploaded file temporarily
+    temp_file_path = f"temp_{file.filename}"
+    with open(temp_file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+
+    try:
+        # Output CSV can be temporary or in-memory, here we keep it simple with temp CSV
+        output_csv_path = f"temp_output.csv"
+
+        # Run your processing function on this file
+        success = process_single_file(temp_file_path, output_csv_path)
+
+        if not success:
+            raise HTTPException(status_code=400, detail="Failed to extract metadata")
+
+        # Read the CSV output
+        import pandas as pd
+        df = pd.read_csv(output_csv_path)
+        result = df.to_dict(orient="records")[0]  # Get the first (and only) row as dict
+
+        # Clean up temp files
+        os.remove(temp_file_path)
+        os.remove(output_csv_path)
+
+        return JSONResponse(content=result)
+
+    except Exception as e:
+        # Cleanup temp files on error too
+        if os.path.exists(temp_file_path):
+            os.remove(temp_file_path)
+        if os.path.exists(output_csv_path):
+            os.remove(output_csv_path)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
