@@ -79,3 +79,65 @@ This project automates the extraction of key information from rental agreement d
 4. Run the main extraction script:  
   
    python extraction_metadata.py
+
+
+   
+## Rental Agreement Metadata Extraction API
+========================================
+
+1. Setup Instructions
+---------------------
+- Make sure you have Python 3.7+ installed.
+- Install required packages by running:
+
+    pip install fastapi uvicorn python-multipart pandas
+
+2. Running the API Server
+-------------------------
+- Save the FastAPI code in a file named `app.py`.
+- Run the server using the command:
+
+    uvicorn app:app --reload
+
+- You will see output like:
+
+    INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+
+3. Accessing the API
+--------------------
+- Open your browser and navigate to:
+
+    http://127.0.0.1:8000/docs
+
+- This opens an interactive Swagger UI where you can test the `/extract/` endpoint.
+
+4. Using the `/extract/` API Endpoint
+-------------------------------------
+- Method: POST
+- URL: http://127.0.0.1:8000/extract/
+- Form-data field: `file` (upload a `.docx` or `.png` document file)
+
+5. Example Using curl
+---------------------
+To extract metadata from a document file (`sample.docx`), run:
+
+    curl -X POST "http://127.0.0.1:8000/extract/" -F "file=@sample.docx"
+
+- The response will be a JSON containing extracted metadata fields like:
+
+    {
+        "Agreement Start Date": "2023-01-01",
+        "Agreement End Date": "2024-01-01",
+        "Renewal Notice (Days)": 30,
+        "Party One": "Company A",
+        "Party Two": "Company B"
+    }
+
+6. Notes
+--------
+- Temporary files are automatically deleted after processing.
+- Make sure to handle errors appropriately; the API returns status codes 400 or 500 on failure.
+
+---
+
+Thank you for using this API!
