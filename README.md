@@ -67,6 +67,9 @@ This project automates the extraction of key information from rental agreement d
 - The Groq API is the core engine for extracting structured data from raw document text.  
 - It uses domain-specific query logic to identify contractual parameters from unstructured text.  
 - Designed to maximize recall and maintain reasonable precision across various document formats.
+- Open groq_api portal and create a api.
+- copy the created api.
+- place it in the environment in which your code is running
 
 ## How to Run
 
