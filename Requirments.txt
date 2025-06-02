@@ -6,3 +6,6 @@ pydantic
 langchain
 langchain-groq
 pandas
+fastapi
+uvicorn
+python-multipart
