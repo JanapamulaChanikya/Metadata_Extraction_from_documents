@@ -1,0 +1,8 @@
+python-dotenv
+easyocr
+docx
+pypdf
+pydantic
+langchain
+langchain-groq
+pandas
